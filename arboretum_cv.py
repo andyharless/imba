@@ -14,7 +14,7 @@ from sklearn.utils.multiclass import  type_of_target
 
 
 if __name__ == '__main__':
-    path = "data"
+    path = "/data"
 
     aisles = pd.read_csv(os.path.join(path, "aisles.csv"), dtype={'aisle_id': np.uint8, 'aisle': 'category'})
     departments = pd.read_csv(os.path.join(path, "departments.csv"),
