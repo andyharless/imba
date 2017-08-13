@@ -126,7 +126,7 @@ if __name__ == '__main__':
     orders_products['add_to_cart_order_relative'] = orders_products.add_to_cart_order / orders_products.order_size
 
     data = orders_products.groupby(['user_id', 'product_id']).agg({'user_id': 'size',
-                                                                   'order_number': ['min', 'max'],
+                                                                   'order_number': ['min', 'max', 'mean'],
                                                                    'add_to_cart_order': ['mean', 'median'],
                                                                    'days_since_prior_order': ['mean', 'median'],
                                                                    'order_dow': ['mean', 'median'],
@@ -136,7 +136,7 @@ if __name__ == '__main__':
                                                                    'reordered': ['sum']})
 
     data.columns = data.columns.droplevel(0)
-    data.columns = ['up_orders', 'up_first_order', 'up_last_order', 'up_mean_cart_position', 'up_median_cart_position',
+    data.columns = ['up_orders', 'up_first_order', 'up_last_order', 'up_mean_order', 'up_mean_cart_position', 'up_median_cart_position',
                     'days_since_prior_order_mean', 'days_since_prior_order_median', 'order_dow_mean',
                     'order_dow_median',
                     'order_hour_of_day_mean', 'order_hour_of_day_median',
@@ -160,6 +160,10 @@ if __name__ == '__main__':
     data['up_order_rate'] = data.up_orders / data.user_orders
     data['up_orders_since_last_order'] = data.user_orders - data.up_last_order
     data['up_order_rate_since_first_order'] = data.user_orders / (data.user_orders - data.up_first_order + 1)
+    data['up_order_skew'] = data.up_mean_order / data.up_last_order
+    data['up_dueness'] = data.up_order_rate * data.up_orders_since_last_order 
+    data['up_alt_dueness'] = data.up_orders_since_last_order * data.up_order_rate_since_first_order
+
 
     ############################
 
@@ -238,6 +242,8 @@ if __name__ == '__main__':
         'prod_orders', 'prod_reorders',
         'up_order_rate', 'up_orders_since_last_order', 'up_order_rate_since_first_order',
         'up_orders', 'up_first_order', 'up_last_order', 'up_mean_cart_position',
+        'up_mean_order', 'up_order_skew',
+        'up_dueness', 'up_alt_dueness',
         # 'up_median_cart_position',
         'days_since_prior_order_mean',
         # 'days_since_prior_order_median',
