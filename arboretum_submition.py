@@ -304,7 +304,7 @@ if __name__ == '__main__':
     print('training...')
 
     # grow trees
-    for i in range(9500):
+    for i in range(8000):
         print('tree', i)
         model.grow_tree()
         model.append_last_tree(data_val)
